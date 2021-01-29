@@ -221,6 +221,12 @@ class ShiroIsCB {
             return null;
         }
     }
+    /**
+     * Get link to anime page
+     * @param {string} anime anime name
+     * @param {string} ep anime episode
+     * @param {function} cb callback
+     */
     async getlink(anime, ep, cb) {
         this.search(anime, (ani) => {
             const slug = ani[0].slug;
@@ -228,6 +234,12 @@ class ShiroIsCB {
             return cb(link)
         })
     }
+    /**
+     * Get video source link
+     * @param {string} anime anime name
+     * @param {string} ep anime episode
+     * @param {function} cb callback
+     */
     async getiframe(anime, ep, cb) {
         this.getlink(anime, ep, async (ani) => {
             const browser = await puppeteer.launch();
@@ -246,6 +258,12 @@ class ShiroIsCB {
             await browser.close();
         })
     }
+    /**
+     * Get video source from iframe
+     * @param {string} anime anime name
+     * @param {string} ep anime episode
+     * @param {function} cb callback
+     */
     async getvideo(anime, ep, cb) {
         this.getiframe(anime, ep, async (ani) => {
             const browser = await puppeteer.launch();
