@@ -11,15 +11,14 @@ class TwistMoe {
     /**
      * Search for an anime
      * @param {string} animeToSearchFor anime name
-     * @param {string} ep episode
      * @param {function} cb callback
      */
-    async search(animeToSearchFor, ep, cb) {
+    async search(animeToSearchFor, cb) {
         const link = `${this.base}/anime`;
         const res = JSON.parse(await (await fetch(link, {headers:{'x-access-token': '0df14814b9e590a1f26d3071a4ed7974', 'user-agent': '1.0.16'}})).text());
         const anime = animeToSearchFor.toLowerCase();
         const f = res.find(x => x.slug.slug === anime || x.title.toLowerCase() === anime) || res.find(x => x.slug.slug.includes(anime) || x.title.toLowerCase().includes(anime));
-        cb(f)
+        cb([f])
     }
     /**
      * Get download link
@@ -27,8 +26,9 @@ class TwistMoe {
      * @param {string} ep episode
      * @param {function} cb callback
      */
-    async getlink(animeToSearchFor, ep, cb) {
-        this.search(animeToSearchFor, ep, (async (ani) => {
+    async getvideo(animeToSearchFor, ep, cb) {
+        this.search(animeToSearchFor, ep, (async (a) => {
+            const ani = a[0]
             const l2 = `${this.base}/anime/${ani.slug.slug}/sources`;
             const r2 = JSON.parse(await (await fetch(l2, {headers:{'x-access-token': '0df14814b9e590a1f26d3071a4ed7974', 'user-agent': '1.0.16'}})).text());
             const b2 = r2.find(x => x.number === parseInt(ep));
@@ -45,7 +45,7 @@ class TwistMoe {
      * @param {string} dir directory
      */
     async download(animeToSearchFor, ep, dir) {
-        this.getlink(animeToSearchFor, ep, (async (ani) => {
+        this.getvideo(animeToSearchFor, ep, (async (ani) => {
             const file = fs.createWriteStream(dir);
             fetch(ani, { headers: { 'user-agent': '1.0.16', 'referer': this.base } }).then(res => {
                 if(!res.ok) throw new Error(`Server responded with ${res.status} (${res.statusText})`)

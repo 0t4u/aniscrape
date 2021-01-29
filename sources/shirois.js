@@ -249,7 +249,7 @@ class ShiroIsCB {
             await page.goto(ani, {
                 waitUntil: ['domcontentloaded', 'networkidle2']
             });
-            await page.waitForTimeout(10000)
+            await page.waitForTimeout(10000);
             const iframe = await page.evaluate(() => {
                 return {
                     link: document.getElementById('video').lastChild.src
