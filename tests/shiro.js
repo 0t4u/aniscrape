@@ -1,5 +1,5 @@
-const ShiroIs = require('./sources/shirois');
-const ShiroIsCb = require('./sources/shirois').cb;
+const ShiroIs = require('../sources/shirois').simple;
+const ShiroIsCb = require('../sources/shirois');
 
 const shiro = new ShiroIsCb();
 

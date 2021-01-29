@@ -280,5 +280,5 @@ class ShiroIsCB {
     }
 }
 
-module.exports = ShiroIs;
-module.exports.cb = ShiroIsCB
+module.exports.simple = ShiroIs;
+module.exports = ShiroIsCB
