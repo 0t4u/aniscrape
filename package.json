@@ -1,6 +1,6 @@
 {
   "name": "aniscrape",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto-js": "^4.0.0",
     "node-fetch": "^2.6.1",
     "puppeteer": "^5.5.0",
     "qs": "^6.9.6"

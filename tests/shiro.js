@@ -7,10 +7,4 @@ const shiro = new ShiroIsCb();
     console.log(ani)
 });*/
 
-shiro.getlink('overlord', '1', (l) => {
-    console.log(l)
-})
-
-shiro.getvideo('overlord', '1', (l) => {
-    console.log(l)
-})
+shiro.download('overlord', '1', './anime.mp4')

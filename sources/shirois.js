@@ -1,6 +1,7 @@
 const qs = require('qs');
 const fetch = require('node-fetch');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 
 class ShiroIs {
     constructor() {
@@ -248,7 +249,7 @@ class ShiroIsCB {
             await page.goto(ani, {
                 waitUntil: ['domcontentloaded', 'networkidle2']
             });
-            page.waitForTimeout(10000)
+            await page.waitForTimeout(10000)
             const iframe = await page.evaluate(() => {
                 return {
                     link: document.getElementById('video').lastChild.src
@@ -276,6 +277,24 @@ class ShiroIsCB {
             })
             cb(video.src)
             await browser.close();
+        })
+    }
+    /**
+     * Download an anime
+     * @param {string} animeToSearchFor anime name
+     * @param {string} ep episode
+     * @param {string} dir directory
+     */
+    async download(animeToSearchFor, ep, dir) {
+        this.getvideo(animeToSearchFor, ep, (ani) => {
+            const file = fs.createWriteStream(dir);
+            fetch(ani).then(res => {
+                if(!res.ok) throw new Error(`Server responded with ${res.status} (${res.statusText})`)
+                res.body.pipe(file)
+                console.log(`Writing file (${dir})...`)
+            }).catch(ex => {
+                throw new Error(ex)
+            })
         })
     }
 }
