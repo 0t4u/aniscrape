@@ -1,5 +1,5 @@
-const ShiroIs = require('./sources/shirois');
-const ShiroIsCb = require('./sources/shirois').cb;
+const ShiroIs = require('./sources/shirois').simple;
+const ShiroIsCb = require('./sources/shirois');
 
-module.exports.shiro = new ShiroIs();
-module.exports.shiro.cb = new ShiroIsCb();
+module.exports.shiro.simple = new ShiroIs();
+module.exports.shiro = new ShiroIsCb();
