@@ -17,9 +17,8 @@ class FourAnime {
     /**
      * Search for an anime
      * @param {string} animeToSearchFor anime name
-     * @param {function} cb callback
      */ 
-    async search(animeToSearchFor, cb) {
+    async search(animeToSearchFor) {
         const reqbody = 'asl_active=1&p_asl_data=qtranslate_lang%3D0%26set_intitle%3DNone%26customset%255B%255D%3Danime';
         const link = `https://4anime.to/?${qs.stringify({s: animeToSearchFor})}`;
         //let res = JSON.parse(await (await fetch(link, { headers: this.headers, method: 'POST', body: reqbody })).text())
@@ -48,16 +47,15 @@ class FourAnime {
                 })
             }
         })
-        cb(search.data)
         await browser.close();
+        return search.data
     }
     /**
      * Get anime episodes
      * @param {string} animeToSearchFor anime name
-     * @param {string} cb callback
      */
-    async geteps(animeToSearchFor, cb) {
-        this.search(animeToSearchFor, (async (ani) => {
+    async geteps(animeToSearchFor) {
+        this.search(animeToSearchFor).then(async (ani) => {
             const link = ani[0].link;
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
@@ -76,19 +74,18 @@ class FourAnime {
                     })
                 }
             })
-            cb(search.length)
             await browser.close();
-        }))
+            return search.length
+        })
     }
     /**
      * Get download link
      * @param {string} animeToSearchFor anime name
      * @param {string} ep episode
-     * @param {function} cb callback
      */
-    async getvideo(animeToSearchFor, ep, cb) {
-        this.geteps(animeToSearchFor, (async (ani) => {
-            const link = ani[ep];
+    async getvideo(animeToSearchFor, ep) {
+        this.geteps(animeToSearchFor).then(async (ani) => {
+            const link = ani[ep - 1];
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
             await page.setRequestInterception(true);
@@ -103,9 +100,9 @@ class FourAnime {
             const search = await page.evaluate(() => {
                 return document.querySelectorAll('div.mirror-footer.cl')[0].getElementsByTagName('script')[0].innerHTML.match(RegExp(/href=..([^\\\\]+)/))[1]
             })
-            cb(search)
             await browser.close();
-        }))
+            return search;
+        })
     }
     /**
      * Download an anime
@@ -114,7 +111,7 @@ class FourAnime {
      * @param {string} dir directory
      */
     async download(animeToSearchFor, ep, dir) {
-        this.getvideo(animeToSearchFor, ep, ((ani) => {
+        this.getvideo(animeToSearchFor, ep).then((ani) => {
             const file = fs.createWriteStream(dir);
             fetch(ani).then(res => {
                 if(!res.ok) throw new Error(`Server responded with ${res.status} (${res.statusText})`)
@@ -123,7 +120,7 @@ class FourAnime {
             }).catch(ex => {
                 throw new Error(ex)
             })
-        }))
+        })
     }
 }
 

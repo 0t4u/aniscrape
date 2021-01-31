@@ -3,7 +3,7 @@ const ShiroIsCb = require('../sources/shirois');
 
 const shiro = new ShiroIsCb();
 
-shiro.search('overlord', (ani) => {
+shiro.search('overlord').then((ani) => {
     console.log(ani)
 });
 
